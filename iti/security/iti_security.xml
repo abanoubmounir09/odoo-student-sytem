@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+
+
+        <record id="iti_groups_category" model="ir.module.category">
+            <field name="name">ITI Group</field>
+        </record>
+
+            <record id="iti_normal_group" model="res.groups">
+                <field name="name">iti normal user</field>
+                <field name="category_id" ref="iti_groups_category"/>
+            </record>
+
+            <record id="iti_manager_group" model="res.groups">
+                <field name="name">iti manager user</field>
+                <field name="category_id" ref="iti_groups_category"/>
+                <field name="implied_ids" eval="[(4,ref('iti_normal_group'))]"/>
+            </record>
+
+<!--        create rule each user could see his student-->
+        <record id="view_created_students_only_rule" model="ir.rule">
+            <field name="name">view created students only</field>
+            <field name="model_id" ref="model_iti_student"/>
+            <field name="domain_force">[('create_uid','=',user.id)]</field>
+            <field name="groups" eval="[(4,ref('iti_normal_group'))]"></field>
+
+        </record>
+
+        <!--        create rule manger see all student-->
+        <record id="view_all_students_rule" model="ir.rule">
+            <field name="name">view all students </field>
+            <field name="model_id" ref="model_iti_student"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4,ref('iti_manager_group'))]"></field>
+        </record>
+    </data>
+</odoo>

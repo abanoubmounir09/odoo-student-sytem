@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <!--custom_tree_view-->
+        <record model="ir.ui.view" id="student_tree_view">
+            <field name="name">Students tree view</field>
+            <field name="model">iti.student</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="birth_date"/>
+                    <field name="salary"/>
+                    <field name="tax"/>
+                </tree>
+            </field>
+        </record>
+
+         <!--custom_form_view-->
+         <record model="ir.ui.view" id="form_form_view">
+            <field name="name">name</field>
+            <field name="model">iti.student</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="custom string" version="7.0"  >
+                    <header>
+                        <field name="state" widget="statusbar" />
+                            <button string="first interview" type="object" name="change_state"
+                                attrs="{'invisible':[('state','!=','applied')]}"/>
+                            <button string="second interview" type="object" states="first" name="change_state"/>
+                            <button string="passed" type="object" states="second" name="set_pass"/>
+                            <button string=" rejected" type="object" states="second" name="set_reject"/>
+                            <button string=" back to applied" type="object" states="passed,rejected" name="change_state"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="Basic Info">
+                               <field name="name"/>
+                                <field name="salary"/>
+                                <field name="tax"/>
+                                <field name="email"/>
+                                <field name="state"/>
+                                <field name="gender"/>
+                                 <field name="birth_date"
+                                    attrs="{'invisible':[('gender','=','f')]}"
+                                 />
+                                <field name="skills_ids" widget="many2many_tags"/>
+
+                            </group>
+                            <group string="ITI Info">
+                                <field name="accepted"/>
+                                <field name="level"/>
+                                <field name="image" widget="image"/>
+                                <field name="login_time"/>
+                                 <field name="track_id" domain="[('is_open','=',True)]" groups="iti.iti_manager_group"/>
+                                 <field name="track_capacity"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="cv">
+                                <field name="cv"/>
+                            </page>
+                            <page string="address">
+                                <field name="address"/>
+                            </page>
+                            <page string="grades">
+                                <field name="grads_ids">
+                                    <tree>
+                                         <field name="course_id"/>
+                                         <field name="grades"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--action-->
+        <record model="ir.actions.act_window" id="add_student">
+            <field name="name">Students</field>
+            <field name="res_model">iti.student</field>
+        </record>
+
+        <menuitem id="iti_root" name="ITI"/>
+        <menuitem id="iti_student_menu" name="Students" parent="iti_root" action="add_student"/>
+
+    </data>
+</odoo>
